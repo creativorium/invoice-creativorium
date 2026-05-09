@@ -10,7 +10,7 @@ export default function Documentation() {
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-color)', padding: '40px 20px', fontFamily: 'var(--font-family)', color: 'var(--primary-color)' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto', backgroundColor: 'var(--invoice-bg)', padding: '40px', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
         <h1 style={{ fontSize: '32px', marginBottom: '10px', color: 'var(--primary-color)', borderBottom: '2px solid var(--accent-color)', paddingBottom: '10px', display: 'inline-block' }}>Panduan Penggunaan</h1>
-        <p style={{ color: 'var(--secondary-color)', marginBottom: '40px', fontSize: '16px', lineHeight: '1.6' }}>Dokumentasi komprehensif cara menggunakan <strong>Creativorium Invoice Generator</strong>. Ikuti langkah-langkah di bawah ini untuk membuat invoice yang terlihat profesional dengan cepat dan mudah.</p>
+        <p style={{ color: 'var(--secondary-color)', marginBottom: '40px', fontSize: '16px', lineHeight: '1.6' }}>Dokumentasi komprehensif cara menggunakan <strong>Creativorium Invoice Generator</strong>. Ikuti langkah-langkah di bawah ini untuk membuat invoice dengan editor yang cepat dan mudah.</p>
 
         {/* 1. Akses & Login */}
         <section style={{ marginBottom: '35px' }}>
@@ -82,8 +82,8 @@ export default function Documentation() {
           <ul style={{ listStyleType: 'disc', paddingLeft: '20px', lineHeight: '1.8' }}>
             <li><strong>My Info & Payment Methods:</strong> Informasi Nama, Jabatan Penagih, dan Detail Rekening Bank untuk pencairan dana (tersedia maksimal 2 slot rekening bank berbeda).</li>
             <li><strong>Company Footer Details:</strong> Informasi kontak perusahaan pendukung yang akan muncul pada bagian bawah invoice.</li>
-            <li><strong>Custom Note (Catatan Tambahan):</strong> Tulis pesan hangat (seperti "Terima Kasih atas kerjasamanya!") atau instruksi khusus transfer. Catatan ini akan tersemat rapi di atas metode pembayaran.</li>
-            <li><strong>Company Logo:</strong> Anda bisa mengunggah file logo (Maksimal 2MB) yang akan memperindah invoice di header dan footer.</li>
+            <li><strong>Custom Note (Catatan Tambahan):</strong> Tulis pesan hangat (seperti "Terima Kasih atas kerjasamanya!") atau instruksi khusus transfer. Catatan ini akan muncul di atas metode pembayaran. Mohon maap spacenya jgn banyak banyak dipakai nanti jelek.</li>
+            <li><strong>Company Logo:</strong> Anda bisa mengunggah file logo (Maksimal 2MB) akan muncul di header dan footer.</li>
             <li><strong>Theme Color:</strong> Ubah warna aksen tema invoice sesuai keinginan (Bawaan: oranye kekuningan Creativorium).</li>
           </ul>
         </section>
@@ -94,18 +94,14 @@ export default function Documentation() {
             <span style={{ backgroundColor: 'var(--accent-color)', color: 'white', borderRadius: '50%', width: '30px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px' }}>6</span>
             Export (Simpan, Cetak, & Bagikan)
           </h2>
-          <p style={{ lineHeight: '1.8', marginBottom: '10px' }}>
-            Sistem bekerja secara mutakhir; ketika Anda menekan tombol bagikan/cetak, rincian invoice akan <strong>otomatis tercatat di Database Google Sheets</strong> perusahaan.
-          </p>
           <ul style={{ listStyleType: 'disc', paddingLeft: '20px', lineHeight: '1.8' }}>
             <li><strong>Share URL:</strong> Menghasilkan dan menyalin sebuah tautan pendek (contoh: <code>/view?id=abcde</code>). Berikan tautan ini ke klien agar mereka dapat mengakses invoice digital secara instan lewat browser mereka, kapan saja.</li>
-            <li><strong>Print / PDF:</strong> Mencetak layar aktif atau menyimpan dokumen lokal menjadi file PDF yang sah.</li>
+            <li><strong>Print / PDF:</strong> Mencetak layar aktif atau menyimpan dokumen lokal menjadi file PDF yang sah. Tapi mohon maap PDFnya kadang 2 page kadang 1 page ga jelas masih.</li>
           </ul>
         </section>
 
         <div style={{ textAlign: 'center', marginTop: '50px', paddingTop: '30px', borderTop: '1px solid var(--border-color)' }}>
-          <p style={{ color: 'var(--secondary-color)', marginBottom: '20px' }}>Siap untuk mulai menerbitkan invoice?</p>
-          <a href="/" style={{ color: 'white', backgroundColor: 'var(--accent-color)', fontWeight: 'bold', textDecoration: 'none', display: 'inline-block', padding: '12px 30px', borderRadius: '6px', transition: 'all 0.3s ease' }}>Buat Invoice Sekarang</a>
+          <a href="/" style={{ color: 'white', backgroundColor: 'var(--accent-color)', fontWeight: 'bold', textDecoration: 'none', display: 'inline-block', padding: '12px 30px', borderRadius: '6px', transition: 'all 0.3s ease' }}>Gas Buat Invoice</a>
         </div>
       </div>
     </div>
