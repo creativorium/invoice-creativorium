@@ -167,16 +167,19 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
       <div className={styles.totals}>
         <div className={styles.totalsBox}>
           <div className={styles.totalRow}>
-            <span>Total Qty / Hrs :</span>
-            <span>{formattedTotalQty}</span>
+            <span className={styles.totalLabel}>Total Qty / Hrs</span>
+            <span className={styles.totalColon}>:</span>
+            <span className={styles.totalValue}>{formattedTotalQty}</span>
           </div>
           <div className={styles.totalRow}>
-            <span>Sub Total :</span>
-            <span>{formatCurrency(subTotal)}</span>
+            <span className={styles.totalLabel}>Sub Total</span>
+            <span className={styles.totalColon}>:</span>
+            <span className={styles.totalValue}>{formatCurrency(subTotal)}</span>
           </div>
           <div className={`${styles.totalRow} ${styles.grandTotal}`}>
-            <span>Grand Total :</span>
-            <span>{formatCurrency(grandTotal)}</span>
+            <span className={styles.totalLabel}>Grand Total</span>
+            <span className={styles.totalColon}>:</span>
+            <span className={styles.totalValue}>{formatCurrency(grandTotal)}</span>
           </div>
         </div>
       </div>

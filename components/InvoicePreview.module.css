@@ -159,10 +159,23 @@
 
 .totalRow {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
   padding: 15px 20px;
   font-size: 14px;
   color: #ffffff;
+}
+
+.totalLabel {
+  width: 100px;
+}
+
+.totalColon {
+  margin-right: auto;
+  padding-left: 10px;
+}
+
+.totalValue {
+  text-align: right;
 }
 
 .totalRow.grandTotal {
