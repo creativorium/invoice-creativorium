@@ -14,6 +14,16 @@ export const metadata: Metadata = {
       { url: '/favicon/favicon.ico', sizes: '48x48', type: 'image/x-icon' },
     ],
   },
+  openGraph: {
+    title: 'Invoice Generator by Creativorium',
+    description: 'Exclusive Invoice Generator by Creativorium',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Invoice Generator by Creativorium',
+    description: 'Exclusive Invoice Generator by Creativorium',
+  }
 }
 
 export default function RootLayout({
