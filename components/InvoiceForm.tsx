@@ -35,8 +35,9 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare }: Invoic
   const addSubtask = () => {
     const newSubtask: Subtask = {
       id: Math.random().toString(36).substr(2, 9),
-      description: 'New Task',
-      quantity: 1,
+      title: 'New Task',
+      subtitle: '',
+      quantity: '1',
       rateType: 'custom',
       customRate: 0
     };
@@ -104,20 +105,28 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare }: Invoic
         {data.subtasks.map((task, index) => (
           <div key={task.id} className={styles.subtaskRow}>
             <div className={styles.inputGroup} style={{ flex: '1 1 150px', minWidth: '150px' }}>
-              <label>Description</label>
-              <textarea 
-                rows={2}
-                value={task.description} 
-                onChange={(e) => handleSubtaskChange(task.id, 'description', e.target.value)} 
-                style={{ fontFamily: 'inherit', resize: 'vertical' }}
+              <label>Title</label>
+              <input 
+                type="text"
+                value={task.title || ''} 
+                onChange={(e) => handleSubtaskChange(task.id, 'title', e.target.value)} 
+                placeholder="Main task name"
+              />
+              <label style={{ marginTop: '5px' }}>Subtitle</label>
+              <input 
+                type="text"
+                value={task.subtitle || ''} 
+                onChange={(e) => handleSubtaskChange(task.id, 'subtitle', e.target.value)} 
+                placeholder="Additional details"
               />
             </div>
             <div className={styles.inputGroup} style={{ flex: '1 1 80px', minWidth: '80px' }}>
               <label>Qty / Hrs</label>
               <input 
-                type="number" 
+                type="text" 
                 value={task.quantity} 
-                onChange={(e) => handleSubtaskChange(task.id, 'quantity', parseFloat(e.target.value) || 0)} 
+                onChange={(e) => handleSubtaskChange(task.id, 'quantity', e.target.value)} 
+                placeholder="e.g. 1 or 3h"
               />
             </div>
             <div className={styles.inputGroup} style={{ flex: '1 1 120px', minWidth: '120px' }}>

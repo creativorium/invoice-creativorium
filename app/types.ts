@@ -1,7 +1,8 @@
 export type Subtask = {
   id: string;
-  description: string;
-  quantity: number; // For hours or quantity
+  title: string;
+  subtitle: string;
+  quantity: string; // For hours or quantity, supports string like "3h"
   rateType: 'minor' | 'major' | 'custom';
   customRate?: number;
 };
@@ -36,9 +37,9 @@ export const defaultInvoiceData: InvoiceData = {
   minorRate: 150000,
   majorRate: 250000,
   subtasks: [
-    { id: '1', description: 'Securing Website Domain\nthebaliestatecollection.com (first year price)', quantity: 1, rateType: 'custom', customRate: 250000 },
-    { id: '2', description: 'Yearly Domain Subscribtion\nMemindahkan konten ke domain baru', quantity: 1, rateType: 'custom', customRate: 375000 },
-    { id: '3', description: 'Website Migration\nMemindahkan konten ke domain baru', quantity: 1, rateType: 'minor', customRate: 150000 }
+    { id: '1', title: 'Securing Website Domain', subtitle: 'thebaliestatecollection.com (first year price)', quantity: '1', rateType: 'custom', customRate: 250000 },
+    { id: '2', title: 'Yearly Domain Subscribtion', subtitle: 'Memindahkan konten ke domain baru', quantity: '1', rateType: 'custom', customRate: 375000 },
+    { id: '3', title: 'Website Migration', subtitle: 'Memindahkan konten ke domain baru', quantity: '1', rateType: 'minor', customRate: 150000 }
   ],
   bank1Name: 'BCA Transfer',
   bank1Account: '7705334846',

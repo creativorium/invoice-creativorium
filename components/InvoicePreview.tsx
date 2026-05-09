@@ -24,7 +24,10 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
   };
 
   const calculateSubTotal = () => {
-    return data.subtasks.reduce((sum, item) => sum + (item.quantity * getRate(item.rateType, item.customRate)), 0);
+    return data.subtasks.reduce((sum, item) => {
+      const parsedQty = parseFloat(String(item.quantity)) || 0;
+      return sum + (parsedQty * getRate(item.rateType, item.customRate));
+    }, 0);
   };
 
   const subTotal = calculateSubTotal();
@@ -58,21 +61,26 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
         <thead>
           <tr>
             <th>ITEM DESCRIPTION</th>
-            <th>UNIT PRICE</th>
-            <th className={styles.quantity}>QUANTITY</th>
+            <th>PRICE RATE</th>
+            <th className={styles.quantity}>QTY / HRS</th>
             <th>TOTAL</th>
           </tr>
         </thead>
         <tbody>
           {data.subtasks.map((item, idx) => {
             const rate = getRate(item.rateType, item.customRate);
-            const total = rate * item.quantity;
-            const descLines = item.description.split('\n');
+            const parsedQty = parseFloat(String(item.quantity)) || 0;
+            const total = rate * parsedQty;
+            
+            // Fallback for old data structure
+            const title = item.title || (item.description ? item.description.split('\n')[0] : '');
+            const subtitle = item.subtitle || (item.description ? item.description.split('\n').slice(1).join('\n') : '');
+
             return (
               <tr key={item.id} className={idx % 2 === 0 ? '' : styles.grayBg}>
                 <td>
-                  <div className={styles.itemTitle}>{descLines[0]}</div>
-                  {descLines.length > 1 && <div className={styles.itemDesc}>{descLines.slice(1).join('\n')}</div>}
+                  <div className={styles.itemTitle}>{title}</div>
+                  {subtitle && <div className={styles.itemDesc}>{subtitle}</div>}
                 </td>
                 <td>{formatCurrency(rate)}</td>
                 <td className={styles.quantity}>{item.quantity}</td>
