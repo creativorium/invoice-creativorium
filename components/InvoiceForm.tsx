@@ -13,14 +13,56 @@ interface InvoiceFormProps {
 }
 
 export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving }: InvoiceFormProps) {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     onChange({ ...data, [name]: value });
+  };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    onChange({ ...data, [name]: checked });
+  };
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert('File size must be less than 2MB');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        onChange({ ...data, logo: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeLogo = () => {
+    onChange({ ...data, logo: '' });
   };
 
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     onChange({ ...data, [name]: parseFloat(value) || 0 });
+  };
+
+  const addGlobalRate = () => {
+    const newRate = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: 'New Service',
+      rate: 0
+    };
+    onChange({ ...data, globalRates: [...(data.globalRates || []), newRate] });
+  };
+
+  const removeGlobalRate = (id: string) => {
+    onChange({ ...data, globalRates: (data.globalRates || []).filter(r => r.id !== id) });
+  };
+
+  const updateGlobalRate = (id: string, field: 'name' | 'rate', value: any) => {
+    const newRates = (data.globalRates || []).map(r => r.id === id ? { ...r, [field]: value } : r);
+    onChange({ ...data, globalRates: newRates });
   };
 
   const handleSubtaskChange = (id: string, field: keyof Subtask, value: any) => {
@@ -39,6 +81,7 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving
       title: 'New Task',
       subtitle: '',
       quantity: '1',
+      quantityType: 'qty',
       rateType: 'custom',
       customRate: 0
     };
@@ -66,13 +109,42 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving
 
       <div className={styles.section}>
         <div className={styles.sectionTitle}>General Info</div>
-        <div className={styles.inputGroup}>
-          <label>Issue Date</label>
-          <input type="date" name="issueDate" value={data.issueDate} onChange={handleChange} />
+        <div className={styles.row}>
+          <div className={styles.inputGroup}>
+            <label>Issue Date</label>
+            <input type="date" name="issueDate" value={data.issueDate} onChange={handleChange} />
+          </div>
+          <div className={styles.inputGroup}>
+            <label>Due Date</label>
+            <input type="date" name="dueDate" value={data.dueDate || ''} onChange={handleChange} />
+          </div>
         </div>
-        <div className={styles.inputGroup}>
-          <label>Invoice Number</label>
-          <input type="text" name="invoiceNumber" value={data.invoiceNumber} onChange={handleChange} />
+        <div className={styles.row}>
+          <div className={styles.inputGroup}>
+            <label>Invoice Number</label>
+            <input type="text" name="invoiceNumber" value={data.invoiceNumber} onChange={handleChange} />
+          </div>
+          <div className={styles.inputGroup}>
+            <label>Currency</label>
+            <select name="currency" value={data.currency || 'IDR'} onChange={handleChange}>
+              <option value="IDR">IDR - Indonesian Rupiah</option>
+              <option value="USD">USD - US Dollar</option>
+              <option value="AUD">AUD - Australian Dollar</option>
+              <option value="SGD">SGD - Singapore Dollar</option>
+            </select>
+          </div>
+        </div>
+        <div className={styles.row}>
+          <div className={styles.inputGroup} style={{ flexDirection: 'row', alignItems: 'center', gap: '10px' }}>
+            <input type="checkbox" name="hasTax" checked={!!data.hasTax} onChange={handleCheckboxChange} style={{ width: 'auto' }} />
+            <label style={{ marginBottom: 0 }}>Apply Tax</label>
+          </div>
+          {data.hasTax && (
+            <div className={styles.inputGroup}>
+              <label>Tax Percentage (%)</label>
+              <input type="number" name="taxPercentage" value={data.taxPercentage || 0} onChange={handleNumberChange} />
+            </div>
+          )}
         </div>
       </div>
 
@@ -89,17 +161,23 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving
       </div>
 
       <div className={styles.section}>
-        <div className={styles.sectionTitle}>Global Rates</div>
-        <div className={styles.row}>
-          <div className={styles.inputGroup}>
-            <label>Minor Update Rate (IDR)</label>
-            <input type="number" name="minorRate" value={data.minorRate} onChange={handleNumberChange} />
-          </div>
-          <div className={styles.inputGroup}>
-            <label>Major Update Rate (IDR)</label>
-            <input type="number" name="majorRate" value={data.majorRate} onChange={handleNumberChange} />
-          </div>
+        <div className={styles.sectionTitle}>
+          <span>Global Rates</span>
+          <button className={`${styles.btn} ${styles.btnSecondary} ${styles.btnSmall}`} onClick={addGlobalRate}>+ Add Rate</button>
         </div>
+        {(data.globalRates || []).map(rate => (
+          <div key={rate.id} className={styles.subtaskRow} style={{ marginBottom: '10px' }}>
+            <div className={styles.inputGroup} style={{ flex: '1 1 200px' }}>
+              <label>Service Name</label>
+              <input type="text" value={rate.name} onChange={(e) => updateGlobalRate(rate.id, 'name', e.target.value)} />
+            </div>
+            <div className={styles.inputGroup} style={{ flex: '1 1 150px' }}>
+              <label>Default Rate ({data.currency || 'IDR'})</label>
+              <input type="number" value={rate.rate} onChange={(e) => updateGlobalRate(rate.id, 'rate', parseFloat(e.target.value) || 0)} />
+            </div>
+            <button className={`${styles.btn} ${styles.btnDanger} ${styles.btnSmall}`} onClick={() => removeGlobalRate(rate.id)} style={{ alignSelf: 'flex-end', marginBottom: '16px' }}>X</button>
+          </div>
+        ))}
       </div>
 
       <div className={styles.section}>
@@ -126,12 +204,29 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving
               />
             </div>
             <div className={styles.inputGroup} style={{ flex: '1 1 80px', minWidth: '80px' }}>
+              <label>Type</label>
+              <select 
+                value={task.quantityType || 'qty'} 
+                onChange={(e) => {
+                  const val = e.target.value as any;
+                  handleSubtaskChange(task.id, 'quantityType', val);
+                  if (val === 'rate') handleSubtaskChange(task.id, 'quantity', '1');
+                }}
+              >
+                <option value="qty">QTY</option>
+                <option value="hrs">HRS</option>
+                <option value="rate">RATE</option>
+              </select>
+            </div>
+            <div className={styles.inputGroup} style={{ flex: '1 1 80px', minWidth: '80px' }}>
               <label>Qty / Hrs</label>
               <input 
                 type="text" 
                 value={task.quantity} 
                 onChange={(e) => handleSubtaskChange(task.id, 'quantity', e.target.value)} 
-                placeholder="e.g. 1 or 3h"
+                placeholder={task.quantityType === 'hrs' ? 'e.g. 2h 30m' : 'e.g. 1'}
+                disabled={task.quantityType === 'rate'}
+                style={{ opacity: task.quantityType === 'rate' ? 0.5 : 1 }}
               />
             </div>
             <div className={styles.inputGroup} style={{ flex: '1 1 120px', minWidth: '120px' }}>
@@ -141,13 +236,14 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving
                 onChange={(e) => handleSubtaskChange(task.id, 'rateType', e.target.value)}
               >
                 <option value="custom">Custom</option>
-                <option value="minor">Minor Update</option>
-                <option value="major">Major Update</option>
+                {(data.globalRates || []).map(rate => (
+                  <option key={rate.id} value={rate.id}>{rate.name}</option>
+                ))}
               </select>
             </div>
             {task.rateType === 'custom' && (
               <div className={styles.inputGroup} style={{ flex: '1 1 100px', minWidth: '100px' }}>
-                <label>Amount (IDR)</label>
+                <label>Amount ({data.currency || 'IDR'})</label>
                 <input 
                   type="number" 
                   value={task.customRate} 
@@ -234,8 +330,29 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving
           </div>
         </div>
 
-        <div className={styles.sectionTitle}>Theme Settings</div>
+        <div className={styles.sectionTitle}>Additional Settings</div>
         <div className={styles.row}>
+          <div className={styles.inputGroup}>
+            <label>Custom Note (above payment methods)</label>
+            <textarea 
+              name="note" 
+              value={data.note || ''} 
+              onChange={handleChange} 
+              placeholder="e.g. Thank you for your business!"
+              style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ddd', fontFamily: 'inherit', resize: 'vertical', minHeight: '60px' }}
+            />
+          </div>
+        </div>
+        <div className={styles.row}>
+          <div className={styles.inputGroup}>
+            <label>Company Logo (Max 2MB)</label>
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+              <input type="file" accept="image/*" onChange={handleLogoUpload} style={{ flex: 1 }} />
+              {data.logo && (
+                <button className={`${styles.btn} ${styles.btnDanger} ${styles.btnSmall}`} onClick={removeLogo} style={{ padding: '0 10px', height: '35px' }}>Remove</button>
+              )}
+            </div>
+          </div>
           <div className={styles.inputGroup}>
             <label>Theme Color</label>
             <input 

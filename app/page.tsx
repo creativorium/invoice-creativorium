@@ -26,6 +26,12 @@ export default function Home() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
+        if (!parsed.globalRates && (parsed.minorRate !== undefined || parsed.majorRate !== undefined)) {
+          parsed.globalRates = [
+            { id: 'minor', name: 'Minor Update', rate: parsed.minorRate || 150000 },
+            { id: 'major', name: 'Major Update', rate: parsed.majorRate || 250000 }
+          ];
+        }
         setData({ ...defaultInvoiceData, ...parsed });
       } catch (e) {
         console.error('Failed to parse saved invoice data', e);
@@ -57,14 +63,38 @@ export default function Home() {
       
       let totalHoursNum = 0;
       const sub = data.subtasks.reduce((sum, item) => {
-        const rate = item.rateType === 'minor' ? data.minorRate : (item.rateType === 'major' ? data.majorRate : (item.customRate || 0));
-        const qty = parseQuantity(item.quantity);
+        let rate = 0;
+        if (item.rateType === 'custom') {
+          rate = item.customRate || 0;
+        } else if (item.rateType === 'minor' && data.minorRate !== undefined) {
+          rate = data.minorRate;
+        } else if (item.rateType === 'major' && data.majorRate !== undefined) {
+          rate = data.majorRate;
+        } else {
+          const globalRate = (data.globalRates || []).find(r => r.id === item.rateType);
+          if (globalRate) rate = globalRate.rate;
+        }
+        
+        const qty = item.quantityType === 'rate' ? 1 : parseQuantity(item.quantity);
         totalHoursNum += qty;
         return sum + (qty * rate);
       }, 0);
-      const grandTotal = Math.ceil(sub / 1000) * 1000;
       
-      const dueDate = new Date(new Date(data.issueDate).getTime() + 24 * 60 * 60 * 1000).toLocaleDateString('en-GB');
+      const taxAmount = data.hasTax ? sub * (data.taxPercentage || 0) / 100 : 0;
+      const rawGrandTotal = sub + taxAmount;
+      
+      let grandTotal = rawGrandTotal;
+      const currency = data.currency || 'IDR';
+      if (currency === 'IDR') {
+        grandTotal = Math.ceil(rawGrandTotal / 1000) * 1000;
+      } else {
+        grandTotal = Math.ceil(rawGrandTotal * 100) / 100;
+      }
+      
+      const paymentDueDate = data.dueDate 
+        ? new Date(data.dueDate + 'T00:00:00').toLocaleDateString('en-GB') 
+        : new Date(new Date(data.issueDate).getTime() + 24 * 60 * 60 * 1000).toLocaleDateString('en-GB');
+
       const taskList = data.subtasks.map(t => t.title).join(', ');
 
       const payload = {
@@ -73,7 +103,7 @@ export default function Home() {
         jsonData: JSON.stringify(data),
         data: {
           date: new Date(data.issueDate).toLocaleDateString('en-GB'),
-          dueDate: dueDate,
+          dueDate: paymentDueDate,
           invoiceName: data.invoiceNumber,
           clientName: data.clientCompany || data.clientName,
           totalHours: totalHoursNum,

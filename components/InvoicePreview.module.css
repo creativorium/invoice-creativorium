@@ -164,7 +164,7 @@
 }
 
 .totalsBox {
-  width: 40%;
+  width: 55%;
   background-color: #1A1A1A;
 }
 
@@ -345,11 +345,14 @@
   .totalsBox {
     width: 100%;
   }
+  .totals {
+    margin-bottom: 30px;
+  }
   .footer {
     flex-direction: column;
-    gap: 50px;
+    gap: 40px;
     align-items: flex-start;
-    margin-top: 80px;
+    margin-top: 50px;
   }
   .signature {
     align-items: flex-start;

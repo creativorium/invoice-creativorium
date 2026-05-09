@@ -1,10 +1,17 @@
+export type GlobalRate = {
+  id: string;
+  name: string;
+  rate: number;
+};
+
 export type Subtask = {
   id: string;
   title: string;
   subtitle: string;
   description?: string; // Kept for backwards compatibility with old localStorage data
   quantity: string; // For hours or quantity, supports string like "3h"
-  rateType: 'minor' | 'major' | 'custom';
+  quantityType?: 'qty' | 'hrs' | 'rate';
+  rateType: string;
   customRate?: number;
 };
 
@@ -16,8 +23,9 @@ export type InvoiceData = {
   invoiceNumber: string;
   taskProject: string;
   issueDate: string;
-  minorRate: number;
-  majorRate: number;
+  minorRate?: number; // Kept for backwards compatibility
+  majorRate?: number; // Kept for backwards compatibility
+  globalRates: GlobalRate[];
   subtasks: Subtask[];
   bank1Name: string;
   bank1Account: string;
@@ -31,6 +39,12 @@ export type InvoiceData = {
   companyWebsite: string;
   companyAddress: string;
   themeColor: string;
+  logo?: string;
+  hasTax?: boolean;
+  taxPercentage?: number;
+  dueDate?: string;
+  note?: string;
+  currency?: string;
 };
 
 export const defaultInvoiceData: InvoiceData = {
@@ -41,10 +55,12 @@ export const defaultInvoiceData: InvoiceData = {
   invoiceNumber: 'INV-0001',
   taskProject: 'Project Name',
   issueDate: new Date().toISOString().split('T')[0],
-  minorRate: 150000,
-  majorRate: 250000,
+  globalRates: [
+    { id: 'minor', name: 'Minor Update', rate: 150000 },
+    { id: 'major', name: 'Major Update', rate: 250000 }
+  ],
   subtasks: [
-    { id: '1', title: 'Task 1', subtitle: 'Sub description task 1', quantity: '1', rateType: 'custom', customRate: 150000 }
+    { id: '1', title: 'Task 1', subtitle: 'Sub description task 1', quantity: '1', quantityType: 'qty', rateType: 'custom', customRate: 150000 }
   ],
   bank1Name: 'BCA Transfer',
   bank1Account: '7705334846',
@@ -57,5 +73,9 @@ export const defaultInvoiceData: InvoiceData = {
   companyEmail: 'dev@creativorium.com',
   companyWebsite: 'creativorium.com',
   companyAddress: 'Bali, Indonesia',
-  themeColor: '#ffa700'
+  themeColor: '#ffa700',
+  currency: 'IDR',
+  hasTax: false,
+  taxPercentage: 11,
+  dueDate: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0],
 };

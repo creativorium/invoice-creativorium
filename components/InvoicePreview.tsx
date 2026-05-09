@@ -13,15 +13,25 @@ interface InvoicePreviewProps {
 
 export default function InvoicePreview({ data }: InvoicePreviewProps) {
   const getRate = (rateType: string, customRate?: number) => {
-    if (rateType === 'minor') return data.minorRate;
-    if (rateType === 'major') return data.majorRate;
+    if (rateType === 'custom') return customRate || 0;
+    if (rateType === 'minor' && data.minorRate !== undefined) return data.minorRate;
+    if (rateType === 'major' && data.majorRate !== undefined) return data.majorRate;
+    
+    const globalRate = (data.globalRates || []).find(r => r.id === rateType);
+    if (globalRate) return globalRate.rate;
+    
     return customRate || 0;
   };
 
   const formatCurrency = (amount: number) => {
-    // Round up to the nearest 1,000 Rupiah for clean numbers (e.g. 366,667 -> 367,000)
-    const roundedUp = Math.ceil(amount / 1000) * 1000;
-    return `IDR ${roundedUp.toLocaleString('id-ID')}`;
+    const currency = data.currency || 'IDR';
+    if (currency === 'IDR') {
+      const roundedUp = Math.ceil(amount / 1000) * 1000;
+      return `IDR ${roundedUp.toLocaleString('id-ID')}`;
+    } else {
+      const roundedUp = Math.ceil(amount * 100) / 100;
+      return `${currency} ${roundedUp.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -71,11 +81,26 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
   };
 
   const subTotal = calculateSubTotal();
-  const grandTotal = subTotal; // Currently no tax logic specified
+  const taxAmount = data.hasTax ? subTotal * (data.taxPercentage || 0) / 100 : 0;
+  const grandTotal = subTotal + taxAmount;
   
-  const totalQuantity = data.subtasks.reduce((sum, item) => sum + parseQuantity(item.quantity), 0);
+  const totalQuantity = data.subtasks.reduce((sum, item) => sum + (item.quantityType === 'rate' ? 1 : parseQuantity(item.quantity)), 0);
+  
+  const hasQty = data.subtasks.some(item => item.quantityType === 'qty');
+  const hasHrs = data.subtasks.some(item => item.quantityType === 'hrs');
+  
+  let qtyHeader = 'QTY / HRS';
+  if (hasQty && !hasHrs) qtyHeader = 'QTY';
+  if (hasHrs && !hasQty) qtyHeader = 'HRS';
+
+  let totalQtyLabel = 'Total Qty / Hrs';
+  if (hasQty && !hasHrs) totalQtyLabel = 'Total Items';
+  if (hasHrs && !hasQty) totalQtyLabel = 'Total Hours';
   
   const isTimeBased = data.subtasks.some(item => {
+    if (item.quantityType === 'hrs') return true;
+    if (item.quantityType === 'qty' || item.quantityType === 'rate') return false;
+    // Fallback logic
     const str = String(item.quantity).toLowerCase();
     return /h(r|rs|ou?rs?)?\b/.test(str) || /m(in|ins|inutes?)?\b/.test(str);
   });
@@ -102,6 +127,10 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
     formattedTotalQty = Number(totalQuantity.toFixed(2)).toString();
   }
 
+  const paymentDueDate = data.dueDate 
+    ? new Date(data.dueDate + 'T00:00:00').toISOString() 
+    : new Date(new Date(data.issueDate).getTime() + 24 * 60 * 60 * 1000).toISOString();
+
   return (
     <div 
       className={styles.previewContainer} 
@@ -115,6 +144,9 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
           {data.clientCompany && <div className={styles.projectName}>{data.clientCompany}</div>}
         </div>
         <div className={styles.headerRight}>
+          {data.logo && (
+            <img src={data.logo} alt="Logo" style={{ maxHeight: '70px', marginBottom: '10px' }} />
+          )}
           <div className={styles.title}>INVOICE</div>
           <div className={styles.metaInfo}>
             <div className={styles.metaColumn}>
@@ -135,7 +167,7 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
           <tr>
             <th>ITEM DESCRIPTION</th>
             <th>PRICE RATE</th>
-            <th className={styles.quantity}>QTY / HRS</th>
+            <th className={styles.quantity}>{qtyHeader}</th>
             <th>TOTAL</th>
           </tr>
         </thead>
@@ -156,7 +188,7 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
                   {subtitle && <div className={styles.itemDesc}>{subtitle}</div>}
                 </td>
                 <td>{formatCurrency(rate)}</td>
-                <td className={styles.quantity}>{item.quantity}</td>
+                <td className={styles.quantity}>{item.quantityType === 'rate' ? '-' : item.quantity}</td>
                 <td>{formatCurrency(total)}</td>
               </tr>
             );
@@ -167,7 +199,7 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
       <div className={styles.totals}>
         <div className={styles.totalsBox}>
           <div className={styles.totalRow}>
-            <span className={styles.totalLabel}>Total Qty / Hrs</span>
+            <span className={styles.totalLabel}>{totalQtyLabel}</span>
             <span className={styles.totalColon}>:</span>
             <span className={styles.totalValue}>{formattedTotalQty}</span>
           </div>
@@ -176,6 +208,13 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
             <span className={styles.totalColon}>:</span>
             <span className={styles.totalValue}>{formatCurrency(subTotal)}</span>
           </div>
+          {data.hasTax && (
+            <div className={styles.totalRow}>
+              <span className={styles.totalLabel}>Tax ({data.taxPercentage}%)</span>
+              <span className={styles.totalColon}>:</span>
+              <span className={styles.totalValue}>{formatCurrency(taxAmount)}</span>
+            </div>
+          )}
           <div className={`${styles.totalRow} ${styles.grandTotal}`}>
             <span className={styles.totalLabel}>Grand Total</span>
             <span className={styles.totalColon}>:</span>
@@ -183,12 +222,19 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
           </div>
         </div>
         <div className={styles.dueDateText}>
-          Payment Due : <strong>{formatDate(new Date(new Date(data.issueDate).getTime() + 24 * 60 * 60 * 1000).toISOString())}</strong>
+          Payment Due : <strong>{formatDate(paymentDueDate)}</strong>
         </div>
       </div>
 
-      <div className={styles.footer}>
-        <div className={styles.paymentMethods}>
+      <div className={styles.footerWrap}>
+        {data.note && (
+          <div style={{ backgroundColor: '#fff9c4', padding: '15px', borderRadius: '8px', marginBottom: '30px', whiteSpace: 'pre-wrap', color: '#555', fontSize: '13px', lineHeight: '1.5' }}>
+            <strong style={{ color: '#333' }}>Note:</strong><br />
+            {data.note}
+          </div>
+        )}
+        <div className={styles.footer}>
+          <div className={styles.paymentMethods}>
           <div className={styles.paymentTitle}>Payment Methods :</div>
           {data.bank1Name && (
             <div className={styles.bankRow}>
@@ -207,10 +253,16 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
           <div className={styles.myTitle}>{data.myTitle}</div>
         </div>
       </div>
+      </div>
 
       {data.companyName && (
         <div className={styles.companyFooter}>
-          <div className={styles.companyName}>{data.companyName}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            {data.logo && (
+              <img src={data.logo} alt="Logo" style={{ maxHeight: '50px' }} />
+            )}
+            <div className={styles.companyName}>{data.companyName}</div>
+          </div>
           <div className={styles.companyContactGroup}>
             <div className={styles.companyContact}>
               {data.companyPhone && <div className={styles.contactItem}><PhoneIcon /> <span>{data.companyPhone}</span></div>}
