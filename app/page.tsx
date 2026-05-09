@@ -50,6 +50,11 @@ export default function Home() {
     });
   };
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem('invoiceAuth');
+  };
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (password === 'yagituajalah') {
@@ -94,6 +99,8 @@ export default function Home() {
 
   return (
     <main className={styles.container}>
+      <button className={styles.logoutTopRight} onClick={handleLogout}>Log Out</button>
+
       <div className={styles.sidebar}>
         <InvoiceForm 
           data={data} 
@@ -104,6 +111,13 @@ export default function Home() {
       </div>
       <div className={styles.previewArea}>
         <InvoicePreview data={data} />
+      </div>
+
+      {/* Fixed bottom action bar for mobile */}
+      <div className={styles.mobileActionBar}>
+        <button className={styles.mobileActionBtn} onClick={handleShare}>Share URL</button>
+        <button className={`${styles.mobileActionBtn} ${styles.mobilePrimary}`} onClick={handlePrint}>Print / PDF</button>
+        <button className={`${styles.mobileActionBtn} ${styles.mobileDanger}`} onClick={handleLogout}>Log Out</button>
       </div>
     </main>
   );

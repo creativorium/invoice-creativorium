@@ -51,6 +51,81 @@
     max-height: none;
     overflow: visible;
   }
+  .logoutTopRight, .mobileActionBar {
+    display: none !important;
+  }
+}
+
+.logoutTopRight {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 8px 15px;
+  background-color: transparent;
+  color: #d93025;
+  border: 1px solid #d93025;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 100;
+}
+
+.logoutTopRight:hover {
+  background-color: #d93025;
+  color: white;
+}
+
+.mobileActionBar {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .logoutTopRight {
+    display: none;
+  }
+
+  .container {
+    padding-bottom: 80px;
+  }
+
+  .mobileActionBar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    padding: 15px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    z-index: 1000;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .mobileActionBtn {
+    flex: 1;
+    padding: 12px 5px;
+    border: 1px solid #ddd;
+    background-color: white;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .mobilePrimary {
+    background-color: #1a3644;
+    color: white;
+    border-color: #1a3644;
+  }
+
+  .mobileDanger {
+    color: #d93025;
+    border-color: #d93025;
+  }
 }
 
 .loginContainer {

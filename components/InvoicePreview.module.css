@@ -156,7 +156,10 @@
 .dueDateText {
   margin-top: 15px;
   font-size: 13px;
-  color: #ff3333;
+  color: #856404;
+  background-color: #fff3cd;
+  padding: 8px 15px;
+  border-radius: 6px;
   text-align: right;
 }
 
