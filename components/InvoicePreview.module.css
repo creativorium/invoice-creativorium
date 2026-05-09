@@ -148,8 +148,16 @@
 
 .totals {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  align-items: flex-end;
   margin-bottom: 50px;
+}
+
+.dueDateText {
+  margin-top: 15px;
+  font-size: 13px;
+  color: #ff3333;
+  text-align: right;
 }
 
 .totalsBox {

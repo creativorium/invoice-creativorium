@@ -182,6 +182,9 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
             <span className={styles.totalValue}>{formatCurrency(grandTotal)}</span>
           </div>
         </div>
+        <div className={styles.dueDateText}>
+          Payment Due : <strong>{formatDate(new Date(new Date(data.issueDate).getTime() + 24 * 60 * 60 * 1000).toISOString())}</strong>
+        </div>
       </div>
 
       <div className={styles.footer}>

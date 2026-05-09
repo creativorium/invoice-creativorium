@@ -58,60 +58,104 @@
   min-height: 100vh;
   align-items: center;
   justify-content: center;
-  background-color: #f9f9f9;
+  background-color: #e5e5e5;
+  background: radial-gradient(circle at center, #f0f0f0 0%, #dcdcdc 100%);
 }
 
-.loginForm {
-  background-color: white;
-  padding: 40px;
+.loginCard {
+  background-color: #faf9f6;
+  padding: 50px 40px;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 420px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  max-width: 400px;
+  gap: 30px;
+}
+
+.loginHeader {
   text-align: center;
+  margin-bottom: 10px;
 }
 
 .loginTitle {
-  font-size: 24px;
+  font-family: serif;
+  font-size: 32px;
+  font-weight: 500;
+  color: #111;
+  margin: 0 0 5px 0;
+  letter-spacing: 1px;
+}
+
+.loginSubtitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: #888;
+  letter-spacing: 3px;
+  margin: 0;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputLabel {
+  font-size: 13px;
   font-weight: 700;
-  margin-bottom: 10px;
-  color: #1A1A1A;
+  color: #555;
 }
 
 .loginInput {
-  padding: 12px 15px;
+  padding: 14px 15px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 14px;
   outline: none;
   font-family: inherit;
   transition: border-color 0.2s;
+  background-color: #fff;
 }
 
 .loginInput:focus {
-  border-color: #1A1A1A;
+  border-color: #1a3644;
 }
 
 .loginButton {
-  padding: 12px;
-  background-color: #1A1A1A;
+  padding: 14px;
+  background-color: #1a3644;
   color: white;
   border: none;
   border-radius: 6px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s;
+  margin-top: 5px;
 }
 
 .loginButton:hover {
-  background-color: #333;
+  background-color: #122631;
 }
 
 .errorMessage {
-  color: #ff3333;
+  color: #d93025;
   font-size: 13px;
+  text-align: center;
   margin-top: -10px;
+}
+
+.loginFooter {
+  text-align: center;
+  font-size: 12px;
+  color: #777;
+  margin: 10px 0 0 0;
 }

@@ -66,19 +66,28 @@ export default function Home() {
   if (!isLoggedIn) {
     return (
       <main className={styles.loginContainer}>
-        <form onSubmit={handleLogin} className={styles.loginForm}>
-          <h1 className={styles.loginTitle}>Creativorium Invoice</h1>
-          <input 
-            type="password" 
-            placeholder="Enter password..." 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={styles.loginInput}
-            autoFocus
-          />
-          <button type="submit" className={styles.loginButton}>Enter</button>
-          {error && <p className={styles.errorMessage}>{error}</p>}
-        </form>
+        <div className={styles.loginCard}>
+          <div className={styles.loginHeader}>
+            <h1 className={styles.loginTitle}>Creativorium</h1>
+            <p className={styles.loginSubtitle}>INVOICE GENERATOR</p>
+          </div>
+          <form onSubmit={handleLogin} className={styles.loginForm}>
+            <div className={styles.inputWrapper}>
+              <label className={styles.inputLabel}>Password</label>
+              <input 
+                type="password" 
+                placeholder="Team password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={styles.loginInput}
+                autoFocus
+              />
+            </div>
+            <button type="submit" className={styles.loginButton}>Enter Invoice Generator</button>
+            {error && <p className={styles.errorMessage}>{error}</p>}
+          </form>
+          <p className={styles.loginFooter}>This area is restricted to authorised Creativorium staff.</p>
+        </div>
       </main>
     );
   }
