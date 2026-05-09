@@ -7,11 +7,12 @@ import { InvoiceData, Subtask } from '../app/types';
 interface InvoiceFormProps {
   data: InvoiceData;
   onChange: (data: InvoiceData) => void;
-  onPrint: () => void;
-  onShare: () => void;
+  onPrint?: () => void;
+  onShare?: () => void;
+  isSaving?: boolean;
 }
 
-export default function InvoiceForm({ data, onChange, onPrint, onShare }: InvoiceFormProps) {
+export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving }: InvoiceFormProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     onChange({ ...data, [name]: value });
@@ -54,8 +55,12 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare }: Invoic
         <h2>Invoice Settings</h2>
         <p>Edit details below to generate the invoice.</p>
         <div className={styles.actions}>
-          <button className={`${styles.btn} ${styles.btnSecondary}`} onClick={onShare}>Share URL</button>
-          <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={onPrint}>Print / PDF</button>
+          <button className={`${styles.btn} ${styles.btnSecondary}`} onClick={onShare} disabled={isSaving}>
+            {isSaving ? 'Saving...' : 'Share URL'}
+          </button>
+          <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={onPrint} disabled={isSaving}>
+            Print / PDF
+          </button>
         </div>
       </div>
 

@@ -13,6 +13,7 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const authStatus = localStorage.getItem('invoiceAuth');
@@ -38,7 +39,13 @@ export default function Home() {
     }
   }, [data, isLoaded]);
 
-  const saveToGoogleSheets = async () => {
+  const generateShareUrl = () => {
+    const encoded = Buffer.from(JSON.stringify(data)).toString('base64');
+    return `${window.location.origin}/view?d=${encoded}`;
+  };
+
+  const saveToGoogleSheets = async (url: string) => {
+    setIsSaving(true);
     try {
       const parseQuantity = (qtyStr: string) => {
         const str = String(qtyStr || '').toLowerCase().trim();
@@ -63,7 +70,8 @@ export default function Home() {
           projectName: data.taskProject,
           clientName: data.clientCompany || data.clientName,
           senderName: data.myName,
-          grandTotal: grandTotal
+          grandTotal: grandTotal,
+          url: url
         }
       };
 
@@ -75,18 +83,19 @@ export default function Home() {
       });
     } catch (e) {
       console.error('Failed to log to Google Sheets', e);
+    } finally {
+      setIsSaving(false);
     }
   };
 
   const handlePrint = async () => {
-    await saveToGoogleSheets();
+    await saveToGoogleSheets(generateShareUrl());
     window.print();
   };
 
   const handleShare = async () => {
-    await saveToGoogleSheets();
-    const encoded = Buffer.from(JSON.stringify(data)).toString('base64');
-    const url = `${window.location.origin}/view?d=${encoded}`;
+    const url = generateShareUrl();
+    await saveToGoogleSheets(url);
     navigator.clipboard.writeText(url).then(() => {
       alert('Shareable URL copied to clipboard! (Data also logged to your Google Sheet)');
     });
@@ -149,6 +158,7 @@ export default function Home() {
           onChange={setData} 
           onPrint={handlePrint}
           onShare={handleShare}
+          isSaving={isSaving}
         />
       </div>
       <div className={styles.previewArea}>
@@ -157,8 +167,12 @@ export default function Home() {
 
       {/* Fixed bottom action bar for mobile */}
       <div className={styles.mobileActionBar}>
-        <button className={styles.mobileActionBtn} onClick={handleShare}>Share URL</button>
-        <button className={`${styles.mobileActionBtn} ${styles.mobilePrimary}`} onClick={handlePrint}>Print / PDF</button>
+        <button className={styles.mobileActionBtn} onClick={handleShare} disabled={isSaving}>
+          {isSaving ? 'Saving...' : 'Share URL'}
+        </button>
+        <button className={`${styles.mobileActionBtn} ${styles.mobilePrimary}`} onClick={handlePrint} disabled={isSaving}>
+          Print / PDF
+        </button>
         <button className={`${styles.mobileActionBtn} ${styles.mobileDanger}`} onClick={handleLogout}>Log Out</button>
       </div>
     </main>
