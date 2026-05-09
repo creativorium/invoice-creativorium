@@ -72,6 +72,9 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
 
   const subTotal = calculateSubTotal();
   const grandTotal = subTotal; // Currently no tax logic specified
+  
+  const totalQuantity = data.subtasks.reduce((sum, item) => sum + parseQuantity(item.quantity), 0);
+  const formattedTotalQty = Number(totalQuantity.toFixed(2)).toString();
 
   return (
     <div 
@@ -137,6 +140,10 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
 
       <div className={styles.totals}>
         <div className={styles.totalsBox}>
+          <div className={styles.totalRow}>
+            <span>Total Qty / Hrs :</span>
+            <span>{formattedTotalQty}</span>
+          </div>
           <div className={styles.totalRow}>
             <span>Sub Total :</span>
             <span>{formatCurrency(subTotal)}</span>
