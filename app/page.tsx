@@ -9,8 +9,17 @@ import { InvoiceData, defaultInvoiceData } from './types';
 export default function Home() {
   const [data, setData] = useState<InvoiceData>(defaultInvoiceData);
   const [isLoaded, setIsLoaded] = useState(false);
+  
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
+    const authStatus = localStorage.getItem('invoiceAuth');
+    if (authStatus === 'true') {
+      setIsLoggedIn(true);
+    }
+
     const saved = localStorage.getItem('invoiceData');
     if (saved) {
       try {
@@ -41,7 +50,38 @@ export default function Home() {
     });
   };
 
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === 'yagituajalah') {
+      setIsLoggedIn(true);
+      localStorage.setItem('invoiceAuth', 'true');
+      setError('');
+    } else {
+      setError('password salah coy, minta dlu ke ownernya');
+    }
+  };
+
   if (!isLoaded) return null;
+
+  if (!isLoggedIn) {
+    return (
+      <main className={styles.loginContainer}>
+        <form onSubmit={handleLogin} className={styles.loginForm}>
+          <h1 className={styles.loginTitle}>Creativorium Invoice</h1>
+          <input 
+            type="password" 
+            placeholder="Enter password..." 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className={styles.loginInput}
+            autoFocus
+          />
+          <button type="submit" className={styles.loginButton}>Enter</button>
+          {error && <p className={styles.errorMessage}>{error}</p>}
+        </form>
+      </main>
+    );
+  }
 
   return (
     <main className={styles.container}>
