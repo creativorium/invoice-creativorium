@@ -5,8 +5,8 @@ import './globals.css'
 const sora = Sora({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Creativorium Invoice',
-  description: 'Invoice generator for Creativorium',
+  title: 'Invoice Generator by Creativorium',
+  description: 'Exclusive Invoice Generator by Creativorium',
   icons: {
     icon: [
       { url: '/favicon/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
