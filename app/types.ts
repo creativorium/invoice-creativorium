@@ -2,6 +2,7 @@ export type Subtask = {
   id: string;
   title: string;
   subtitle: string;
+  description?: string; // Kept for backwards compatibility with old localStorage data
   quantity: string; // For hours or quantity, supports string like "3h"
   rateType: 'minor' | 'major' | 'custom';
   customRate?: number;
