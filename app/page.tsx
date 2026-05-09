@@ -15,6 +15,7 @@ export default function Home() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [saveComplete, setSaveComplete] = useState(false);
 
   useEffect(() => {
     const authStatus = localStorage.getItem('invoiceAuth');
@@ -47,7 +48,6 @@ export default function Home() {
   };
 
   const saveToGoogleSheets = async (url: string) => {
-    setIsSaving(true);
     try {
       const parseQuantity = (qtyStr: string) => {
         const str = String(qtyStr || '').toLowerCase().trim();
@@ -93,22 +93,32 @@ export default function Home() {
       });
     } catch (e) {
       console.error('Failed to log to Google Sheets', e);
-    } finally {
-      setIsSaving(false);
     }
   };
 
   const handlePrint = async () => {
+    setIsSaving(true);
     await saveToGoogleSheets(generateShareUrl());
+    setIsSaving(false);
     window.print();
   };
 
   const handleShare = async () => {
-    const url = generateShareUrl();
-    await saveToGoogleSheets(url);
-    navigator.clipboard.writeText(url).then(() => {
-      alert('Done! URL generated and copied to clipboard.');
-    });
+    setIsSaving(true);
+    setSaveComplete(false);
+    try {
+      const url = generateShareUrl();
+      await saveToGoogleSheets(url);
+      await navigator.clipboard.writeText(url);
+      setSaveComplete(true);
+      setTimeout(() => {
+        setSaveComplete(false);
+        setIsSaving(false);
+      }, 2000);
+    } catch (e) {
+      alert('Failed to generate or copy URL.');
+      setIsSaving(false);
+    }
   };
 
   const handleLogout = () => {
@@ -177,8 +187,17 @@ export default function Home() {
 
       {isSaving && (
         <div className={styles.loadingOverlay}>
-          <div className={styles.loadingSpinner}></div>
-          <p>Generating Invoice...</p>
+          {saveComplete ? (
+            <>
+              <div className={styles.successCheckmark}>✓</div>
+              <p>Done! URL Copied to Clipboard.</p>
+            </>
+          ) : (
+            <>
+              <div className={styles.loadingSpinner}></div>
+              <p>Generating Invoice...</p>
+            </>
+          )}
         </div>
       )}
 
