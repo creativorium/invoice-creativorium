@@ -30,12 +30,35 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
 
   const parseQuantity = (qtyStr: string | number): number => {
     const str = String(qtyStr || '').toLowerCase().trim();
-    const num = parseFloat(str) || 0;
-    // If it explicitly ends with m, min, mins, minutes (e.g. "28m", "30 mins")
-    if (/^[\d.]+\s*m(ins?|inutes?)?$/.test(str)) {
-      return num / 60;
+    
+    // If no letters at all, just return the number
+    if (!/[a-z]/i.test(str)) {
+      return parseFloat(str) || 0;
     }
-    return num;
+
+    let totalHours = 0;
+    let matched = false;
+    
+    // Extract hours (e.g., 3h, 3 hrs, 3 hours)
+    const hMatch = str.match(/([\d.]+)\s*h(r|rs|ou?rs?)?\b/);
+    if (hMatch) {
+      totalHours += parseFloat(hMatch[1]) || 0;
+      matched = true;
+    }
+    
+    // Extract minutes (e.g., 28m, 28 min, 28 mins)
+    const mMatch = str.match(/([\d.]+)\s*m(in|ins|inutes?)?\b/);
+    if (mMatch) {
+      totalHours += (parseFloat(mMatch[1]) || 0) / 60;
+      matched = true;
+    }
+
+    // Fallback if no specific time units matched (e.g., "1 package")
+    if (!matched) {
+      return parseFloat(str) || 0;
+    }
+
+    return totalHours;
   };
 
   const calculateSubTotal = () => {
