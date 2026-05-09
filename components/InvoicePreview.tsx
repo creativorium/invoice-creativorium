@@ -19,7 +19,8 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
   };
 
   const formatCurrency = (amount: number) => {
-    return `IDR ${amount.toLocaleString('id-ID')}`;
+    // Round the amount to avoid recurring decimals like 366.666,667 which look like 366 million
+    return `IDR ${Math.round(amount).toLocaleString('id-ID')}`;
   };
 
   const formatDate = (dateString: string) => {
