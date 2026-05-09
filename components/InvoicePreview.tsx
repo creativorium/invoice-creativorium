@@ -74,7 +74,33 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
   const grandTotal = subTotal; // Currently no tax logic specified
   
   const totalQuantity = data.subtasks.reduce((sum, item) => sum + parseQuantity(item.quantity), 0);
-  const formattedTotalQty = Number(totalQuantity.toFixed(2)).toString();
+  
+  const isTimeBased = data.subtasks.some(item => {
+    const str = String(item.quantity).toLowerCase();
+    return /h(r|rs|ou?rs?)?\b/.test(str) || /m(in|ins|inutes?)?\b/.test(str);
+  });
+
+  let formattedTotalQty = '';
+  if (isTimeBased) {
+    let h = Math.floor(totalQuantity);
+    let m = Math.round((totalQuantity - h) * 60);
+    if (m === 60) {
+      h += 1;
+      m = 0;
+    }
+    
+    if (h > 0 && m > 0) {
+      formattedTotalQty = `${h}h ${m}m`;
+    } else if (h > 0) {
+      formattedTotalQty = `${h}h`;
+    } else if (m > 0) {
+      formattedTotalQty = `${m}m`;
+    } else {
+      formattedTotalQty = `0h`;
+    }
+  } else {
+    formattedTotalQty = Number(totalQuantity.toFixed(2)).toString();
+  }
 
   return (
     <div 
