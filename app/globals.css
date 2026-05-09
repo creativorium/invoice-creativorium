@@ -1,0 +1,40 @@
+:root {
+  --primary-color: #1A1A1A;
+  --secondary-color: #666666;
+  --bg-color: #f4f7f6;
+  --invoice-bg: #FFFFFF;
+  --accent-color: #FF9F00;
+  --border-color: #e0e0e0;
+  --font-family: 'Sora', sans-serif;
+  --dark-bg: #050505;
+  --dark-text: #FFFFFF;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--bg-color);
+  color: var(--primary-color);
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+input, button, select, textarea {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
