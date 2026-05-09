@@ -14,7 +14,8 @@ export default function Home() {
     const saved = localStorage.getItem('invoiceData');
     if (saved) {
       try {
-        setData(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        setData({ ...defaultInvoiceData, ...parsed });
       } catch (e) {
         console.error('Failed to parse saved invoice data', e);
       }

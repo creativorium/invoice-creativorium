@@ -200,6 +200,48 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare }: Invoic
             <input type="text" name="bank2AccountName" value={data.bank2AccountName} onChange={handleChange} />
           </div>
         </div>
+
+        <div className={styles.sectionTitle}>Company Footer Details</div>
+        <div className={styles.row}>
+          <div className={styles.inputGroup}>
+            <label>Company Name</label>
+            <input type="text" name="companyName" value={data.companyName || ''} onChange={handleChange} />
+          </div>
+          <div className={styles.inputGroup}>
+            <label>Company Phone</label>
+            <input type="text" name="companyPhone" value={data.companyPhone || ''} onChange={handleChange} />
+          </div>
+        </div>
+        <div className={styles.row}>
+          <div className={styles.inputGroup}>
+            <label>Company Email</label>
+            <input type="text" name="companyEmail" value={data.companyEmail || ''} onChange={handleChange} />
+          </div>
+          <div className={styles.inputGroup}>
+            <label>Company Website</label>
+            <input type="text" name="companyWebsite" value={data.companyWebsite || ''} onChange={handleChange} />
+          </div>
+        </div>
+        <div className={styles.row}>
+          <div className={styles.inputGroup}>
+            <label>Company Address</label>
+            <input type="text" name="companyAddress" value={data.companyAddress || ''} onChange={handleChange} />
+          </div>
+        </div>
+
+        <div className={styles.sectionTitle}>Theme Settings</div>
+        <div className={styles.row}>
+          <div className={styles.inputGroup}>
+            <label>Theme Color</label>
+            <input 
+              type="color" 
+              name="themeColor" 
+              value={data.themeColor || '#ffa700'} 
+              onChange={handleChange} 
+              style={{ padding: '0 5px', height: '40px', cursor: 'pointer' }}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

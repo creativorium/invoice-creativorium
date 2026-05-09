@@ -8,7 +8,9 @@
   color: #1A1A1A;
   position: relative;
   box-sizing: border-box;
-  border-top: 8px solid #ffa700;
+  border-top: 8px solid var(--theme-color);
+  display: flex;
+  flex-direction: column;
 }
 
 @media print {
@@ -61,7 +63,7 @@
   font-size: 42px;
   font-weight: 700;
   letter-spacing: 2px;
-  color: #ffa700;
+  color: var(--theme-color);
   margin-bottom: 20px;
   text-transform: uppercase;
 }
@@ -91,7 +93,7 @@
 
 .divider {
   width: 1px;
-  background-color: #ffa700;
+  background-color: var(--theme-color);
   height: 35px;
   margin: 0 10px;
 }
@@ -164,7 +166,7 @@
 }
 
 .totalRow.grandTotal {
-  background-color: #ffa700;
+  background-color: var(--theme-color);
   border-top: none;
   font-weight: 700;
   color: #1A1A1A;
@@ -185,7 +187,7 @@
   font-size: 16px;
   font-weight: 700;
   margin-bottom: 15px;
-  color: #ffa700;
+  color: var(--theme-color);
 }
 
 .bankRow {
@@ -243,6 +245,53 @@
   color: #888;
 }
 
+.signature {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.companyFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #1A1A1A;
+}
+
+.companyName {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--theme-color);
+  letter-spacing: 1px;
+}
+
+.companyContactGroup {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.companyContact {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #555;
+}
+
+.companyDivider {
+  width: 1px;
+  height: 40px;
+  background-color: #1A1A1A;
+}
+
 @media (max-width: 768px) {
   .previewContainer {
     width: 100%;
@@ -280,5 +329,17 @@
   .signature {
     align-items: flex-start;
     text-align: left;
+  }
+  .companyFooter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .companyContactGroup {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .companyDivider {
+    display: none;
   }
 }

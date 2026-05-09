@@ -24,6 +24,12 @@ export type InvoiceData = {
   bank2Name: string;
   bank2Account: string;
   bank2AccountName: string;
+  companyName: string;
+  companyPhone: string;
+  companyEmail: string;
+  companyWebsite: string;
+  companyAddress: string;
+  themeColor: string;
 };
 
 export const defaultInvoiceData: InvoiceData = {
@@ -46,5 +52,11 @@ export const defaultInvoiceData: InvoiceData = {
   bank1AccountName: 'Abetnego Kristiawan',
   bank2Name: 'Mandiri Transfer',
   bank2Account: '1370012922742',
-  bank2AccountName: 'Abetnego Kristiawan'
+  bank2AccountName: 'Abetnego Kristiawan',
+  companyName: 'CREATIVORIUM',
+  companyPhone: '+62 877-6018-5018',
+  companyEmail: 'dev@creativorium.com',
+  companyWebsite: 'creativorium.com',
+  companyAddress: 'Bali, Indonesia',
+  themeColor: '#ffa700'
 };
