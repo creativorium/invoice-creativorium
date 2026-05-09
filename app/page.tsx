@@ -100,7 +100,10 @@ export default function Home() {
     setIsSaving(true);
     await saveToGoogleSheets(generateShareUrl());
     setIsSaving(false);
-    window.print();
+    // Use a small timeout to let React render the DOM without the loading overlay
+    setTimeout(() => {
+      window.print();
+    }, 100);
   };
 
   const handleShare = async () => {

@@ -51,7 +51,7 @@
     max-height: none;
     overflow: visible;
   }
-  .logoutTopRight, .mobileActionBar {
+  .logoutTopRight, .mobileActionBar, .loadingOverlay {
     display: none !important;
   }
 }
