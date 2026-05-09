@@ -34,19 +34,17 @@ export type InvoiceData = {
 };
 
 export const defaultInvoiceData: InvoiceData = {
-  clientName: 'Sutra Wardani',
-  clientCompany: 'Casadiolla',
+  clientName: 'Customer Name',
+  clientCompany: 'Client Company',
   myName: 'Abetnego K. T',
   myTitle: 'Developer Creativorium',
-  invoiceNumber: 'A-0090-8876-01026',
-  taskProject: '',
+  invoiceNumber: 'INV-0001',
+  taskProject: 'Project Name',
   issueDate: new Date().toISOString().split('T')[0],
   minorRate: 150000,
   majorRate: 250000,
   subtasks: [
-    { id: '1', title: 'Securing Website Domain', subtitle: 'thebaliestatecollection.com (first year price)', quantity: '1', rateType: 'custom', customRate: 250000 },
-    { id: '2', title: 'Yearly Domain Subscribtion', subtitle: 'Memindahkan konten ke domain baru', quantity: '1', rateType: 'custom', customRate: 375000 },
-    { id: '3', title: 'Website Migration', subtitle: 'Memindahkan konten ke domain baru', quantity: '1', rateType: 'minor', customRate: 150000 }
+    { id: '1', title: 'Task 1', subtitle: 'Sub description task 1', quantity: '1', rateType: 'custom', customRate: 150000 }
   ],
   bank1Name: 'BCA Transfer',
   bank1Account: '7705334846',

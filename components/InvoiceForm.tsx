@@ -155,7 +155,7 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving
                 />
               </div>
             )}
-            <button className={`${styles.btn} ${styles.btnDanger} ${styles.btnSmall}`} onClick={() => removeSubtask(task.id)} style={{ alignSelf: 'flex-end', marginBottom: '4px' }}>X</button>
+            <button className={`${styles.btn} ${styles.btnDanger} ${styles.btnSmall}`} onClick={() => removeSubtask(task.id)} style={{ alignSelf: 'flex-end', marginBottom: '16px' }}>X</button>
           </div>
         ))}
       </div>
