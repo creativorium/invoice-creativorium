@@ -73,7 +73,7 @@ export default function Home() {
       <main className={styles.loginContainer}>
         <div className={styles.loginCard}>
           <div className={styles.loginHeader}>
-            <h1 className={styles.loginTitle}>Creativorium</h1>
+            <h1 className={styles.loginTitle}>CREATIVORIUM</h1>
             <p className={styles.loginSubtitle}>INVOICE GENERATOR</p>
           </div>
           <form onSubmit={handleLogin} className={styles.loginForm}>
@@ -91,7 +91,7 @@ export default function Home() {
             <button type="submit" className={styles.loginButton}>Enter Invoice Generator</button>
             {error && <p className={styles.errorMessage}>{error}</p>}
           </form>
-          <p className={styles.loginFooter}>This area is restricted to authorised Creativorium staff.</p>
+          <p className={styles.loginFooter}>This area is restricted to area.</p>
         </div>
       </main>
     );
