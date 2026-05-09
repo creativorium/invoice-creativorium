@@ -302,7 +302,7 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving
           </div>
         </div>
 
-        <div className={styles.sectionTitle}>Company Footer Details</div>
+        <div className={styles.sectionTitle} style={{ marginTop: '25px'}}>Company Footer Details</div>
         <div className={styles.row}>
           <div className={styles.inputGroup}>
             <label>Company Name</label>
@@ -330,7 +330,7 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving
           </div>
         </div>
 
-        <div className={styles.sectionTitle}>Additional Settings</div>
+        <div className={styles.sectionTitle} style={{ marginTop: '25px'}}>Additional Settings</div>
         <div className={styles.row}>
           <div className={styles.inputGroup}>
             <label>Custom Note (above payment methods)</label>
@@ -346,10 +346,10 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving
         <div className={styles.row}>
           <div className={styles.inputGroup}>
             <label>Company Logo (Max 2MB)</label>
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-              <input type="file" accept="image/*" onChange={handleLogoUpload} style={{ flex: 1 }} />
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexDirection: 'column'}}>
+              <input type="file" accept="image/*" onChange={handleLogoUpload} style={{ flex: 1, width: '100%' }} />
               {data.logo && (
-                <button className={`${styles.btn} ${styles.btnDanger} ${styles.btnSmall}`} onClick={removeLogo} style={{ padding: '0 10px', height: '35px' }}>Remove</button>
+                <button className={`${styles.btn} ${styles.btnDanger} ${styles.btnSmall}`} onClick={removeLogo} style={{ padding: '0 10px', height: '35px', display: 'flex', justifyContent: 'center', alignSelf: 'flex-start', alignItems: 'center'}}>Remove Logo</button>
               )}
             </div>
           </div>

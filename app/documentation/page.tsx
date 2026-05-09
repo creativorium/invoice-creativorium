@@ -15,7 +15,7 @@ export default function Documentation() {
         {/* 1. Akses & Login */}
         <section style={{ marginBottom: '35px' }}>
           <h2 style={{ fontSize: '22px', marginBottom: '15px', color: 'var(--theme-color, var(--primary-color))', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ backgroundColor: 'var(--accent-color)', color: 'white', borderRadius: '50%', width: '30px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px' }}>1</span>
+            <span style={{ backgroundColor: 'var(--accent-color)', color: 'white', borderRadius: '50%', minWidth: '30px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px' }}>1</span>
             Akses & Login
           </h2>
           <p style={{ lineHeight: '1.8', marginBottom: '10px' }}>
@@ -26,7 +26,7 @@ export default function Documentation() {
         {/* 2. General Info */}
         <section style={{ marginBottom: '35px' }}>
           <h2 style={{ fontSize: '22px', marginBottom: '15px', color: 'var(--theme-color, var(--primary-color))', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ backgroundColor: 'var(--accent-color)', color: 'white', borderRadius: '50%', width: '30px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px' }}>2</span>
+            <span style={{ backgroundColor: 'var(--accent-color)', color: 'white', borderRadius: '50%', minWidth: '30px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px' }}>2</span>
             General Info (Informasi Umum)
           </h2>
           <ul style={{ listStyleType: 'none', paddingLeft: '0', lineHeight: '1.8' }}>
@@ -40,7 +40,7 @@ export default function Documentation() {
         {/* 3. Global Rates */}
         <section style={{ marginBottom: '35px' }}>
           <h2 style={{ fontSize: '22px', marginBottom: '15px', color: 'var(--theme-color, var(--primary-color))', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ backgroundColor: 'var(--accent-color)', color: 'white', borderRadius: '50%', width: '30px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px' }}>3</span>
+            <span style={{ backgroundColor: 'var(--accent-color)', color: 'white', borderRadius: '50%', minWidth: '30px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px' }}>3</span>
             Global Rates (Tarif Layanan Dasar)
           </h2>
           <p style={{ lineHeight: '1.8', marginBottom: '10px' }}>
@@ -56,7 +56,7 @@ export default function Documentation() {
         {/* 4. Tasks & Items */}
         <section style={{ marginBottom: '35px' }}>
           <h2 style={{ fontSize: '22px', marginBottom: '15px', color: 'var(--theme-color, var(--primary-color))', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ backgroundColor: 'var(--accent-color)', color: 'white', borderRadius: '50%', width: '30px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px' }}>4</span>
+            <span style={{ backgroundColor: 'var(--accent-color)', color: 'white', borderRadius: '50%', minWidth: '30px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px' }}>4</span>
             Tasks & Items (Pengisian Item Tagihan)
           </h2>
           <p style={{ lineHeight: '1.8', marginBottom: '10px' }}>Isi tabel rincian pengerjaan klien di bagian ini secara detail.</p>
@@ -76,7 +76,7 @@ export default function Documentation() {
         {/* 5. Detail Tambahan & Personalisasi */}
         <section style={{ marginBottom: '35px' }}>
           <h2 style={{ fontSize: '22px', marginBottom: '15px', color: 'var(--theme-color, var(--primary-color))', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ backgroundColor: 'var(--accent-color)', color: 'white', borderRadius: '50%', width: '30px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px' }}>5</span>
+            <span style={{ backgroundColor: 'var(--accent-color)', color: 'white', borderRadius: '50%', minWidth: '30px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px' }}>5</span>
             Personalisasi, Pembayaran, dan Catatan
           </h2>
           <ul style={{ listStyleType: 'disc', paddingLeft: '20px', lineHeight: '1.8' }}>
@@ -91,7 +91,7 @@ export default function Documentation() {
         {/* 6. Export */}
         <section style={{ marginBottom: '35px' }}>
           <h2 style={{ fontSize: '22px', marginBottom: '15px', color: 'var(--theme-color, var(--primary-color))', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ backgroundColor: 'var(--accent-color)', color: 'white', borderRadius: '50%', width: '30px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px' }}>6</span>
+            <span style={{ backgroundColor: 'var(--accent-color)', color: 'white', borderRadius: '50%', minWidth: '30px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px' }}>6</span>
             Export (Simpan, Cetak, & Bagikan)
           </h2>
           <ul style={{ listStyleType: 'disc', paddingLeft: '20px', lineHeight: '1.8' }}>

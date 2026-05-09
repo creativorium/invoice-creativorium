@@ -156,8 +156,8 @@
 .dueDateText {
   margin-top: 15px;
   font-size: 13px;
-  color: #856404;
-  background-color: #fff3cd;
+  color: white;
+  background-color: #f77069;
   padding: 8px 15px;
   border-radius: 6px;
   text-align: right;
@@ -166,6 +166,7 @@
 .totalsBox {
   width: 55%;
   background-color: #1A1A1A;
+  border-radius: 5px;
 }
 
 .totalRow {
@@ -194,6 +195,7 @@
   border-top: none;
   font-weight: 700;
   color: #1A1A1A;
+  border-radius: 0px 0px 5px 5px;
 }
 
 .footer {
@@ -344,6 +346,7 @@
   }
   .totalsBox {
     width: 100%;
+    border-radius: 5px;
   }
   .totals {
     margin-bottom: 30px;

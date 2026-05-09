@@ -29,7 +29,7 @@
 .sectionTitle {
   font-size: 16px;
   font-weight: 600;
-  margin-top: 25px;
+  margin-top: 0px;
   margin-bottom: 15px;
   display: flex;
   justify-content: space-between;
@@ -51,6 +51,7 @@
   font-size: 13px;
   font-weight: 500;
   color: var(--primary-color);
+  margin-top: 10px;
 }
 
 .inputGroup input,
@@ -63,6 +64,10 @@
   transition: border-color 0.2s;
 }
 
+.inputGroup input[type="checkbox"] {
+  margin-top: 10px;
+}
+
 .inputGroup input:focus,
 .inputGroup select:focus,
 .inputGroup textarea:focus {
@@ -73,7 +78,7 @@
 .row {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 0px;
 }
 
 .row > * {
