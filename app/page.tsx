@@ -5,7 +5,6 @@ import styles from './invoice.module.css';
 import InvoiceForm from '../components/InvoiceForm';
 import InvoicePreview from '../components/InvoicePreview';
 import { InvoiceData, defaultInvoiceData } from './types';
-import LZString from 'lz-string';
 
 export default function Home() {
   const [data, setData] = useState<InvoiceData>(defaultInvoiceData);
@@ -41,13 +40,11 @@ export default function Home() {
     }
   }, [data, isLoaded]);
 
-  const generateShareUrl = () => {
-    const jsonString = JSON.stringify(data);
-    const compressed = LZString.compressToEncodedURIComponent(jsonString);
-    return `${window.location.origin}/view?d=${compressed}`;
+  const generateShortId = () => {
+    return Math.random().toString(36).substring(2, 8);
   };
 
-  const saveToGoogleSheets = async (url: string) => {
+  const saveToGoogleSheets = async (id: string, url: string) => {
     try {
       const parseQuantity = (qtyStr: string) => {
         const str = String(qtyStr || '').toLowerCase().trim();
@@ -72,6 +69,8 @@ export default function Home() {
 
       const payload = {
         apiKey: '9W8HLtwj9C3tQrCwQN1PFzuTZLz69pgH',
+        id: id,
+        jsonData: JSON.stringify(data),
         data: {
           date: new Date(data.issueDate).toLocaleDateString('en-GB'),
           dueDate: dueDate,
@@ -98,7 +97,9 @@ export default function Home() {
 
   const handlePrint = async () => {
     setIsSaving(true);
-    await saveToGoogleSheets(generateShareUrl());
+    const id = generateShortId();
+    const url = `${window.location.origin}/view?id=${id}`;
+    await saveToGoogleSheets(id, url);
     setIsSaving(false);
     // Use a small timeout to let React render the DOM without the loading overlay
     setTimeout(() => {
@@ -110,8 +111,9 @@ export default function Home() {
     setIsSaving(true);
     setSaveComplete(false);
     try {
-      const url = generateShareUrl();
-      await saveToGoogleSheets(url);
+      const id = generateShortId();
+      const url = `${window.location.origin}/view?id=${id}`;
+      await saveToGoogleSheets(id, url);
       await navigator.clipboard.writeText(url);
       setSaveComplete(true);
       setTimeout(() => {
