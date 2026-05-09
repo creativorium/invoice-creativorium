@@ -38,15 +38,57 @@ export default function Home() {
     }
   }, [data, isLoaded]);
 
-  const handlePrint = () => {
+  const saveToGoogleSheets = async () => {
+    try {
+      const parseQuantity = (qtyStr: string) => {
+        const str = String(qtyStr || '').toLowerCase().trim();
+        if (!/[a-z]/i.test(str)) return parseFloat(str) || 0;
+        let t = 0; let m = false;
+        const hm = str.match(/([\d.]+)\s*h/); if (hm) { t += parseFloat(hm[1])||0; m=true; }
+        const mm = str.match(/([\d.]+)\s*m/); if (mm) { t += (parseFloat(mm[1])||0)/60; m=true; }
+        return m ? t : (parseFloat(str) || 0);
+      };
+      
+      const sub = data.subtasks.reduce((sum, item) => {
+        const rate = item.rateType === 'minor' ? data.minorRate : (item.rateType === 'major' ? data.majorRate : (item.customRate || 0));
+        return sum + (parseQuantity(item.quantity) * rate);
+      }, 0);
+      const grandTotal = Math.ceil(sub / 1000) * 1000;
+
+      const payload = {
+        apiKey: '9W8HLtwj9C3tQrCwQN1PFzuTZLz69pgH',
+        data: {
+          invoiceNumber: data.invoiceNumber,
+          date: new Date(data.issueDate).toLocaleDateString('en-GB'),
+          projectName: data.taskProject,
+          clientName: data.clientCompany || data.clientName,
+          senderName: data.myName,
+          grandTotal: grandTotal
+        }
+      };
+
+      await fetch('https://script.google.com/macros/s/AKfycbyL7SNI88Dk0Lqi2_ms215SrMtrYMyRGk3Sp3fHtVe6_d74OOI6RIVad08cK6ChjOl7/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+    } catch (e) {
+      console.error('Failed to log to Google Sheets', e);
+    }
+  };
+
+  const handlePrint = async () => {
+    await saveToGoogleSheets();
     window.print();
   };
 
-  const handleShare = () => {
+  const handleShare = async () => {
+    await saveToGoogleSheets();
     const encoded = Buffer.from(JSON.stringify(data)).toString('base64');
     const url = `${window.location.origin}/view?d=${encoded}`;
     navigator.clipboard.writeText(url).then(() => {
-      alert('Shareable URL copied to clipboard!');
+      alert('Shareable URL copied to clipboard! (Data also logged to your Google Sheet)');
     });
   };
 
