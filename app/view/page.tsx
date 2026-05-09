@@ -4,6 +4,7 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import InvoicePreview from '../../components/InvoicePreview';
 import { InvoiceData } from '../types';
+import LZString from 'lz-string';
 
 function ViewInvoiceContent() {
   const searchParams = useSearchParams();
@@ -13,8 +14,16 @@ function ViewInvoiceContent() {
   useEffect(() => {
     if (dataParam) {
       try {
-        const decoded = Buffer.from(dataParam, 'base64').toString('utf-8');
-        setData(JSON.parse(decoded));
+        let jsonString = '';
+        // Try LZString decompression first
+        const decompressed = LZString.decompressFromEncodedURIComponent(dataParam);
+        if (decompressed) {
+          jsonString = decompressed;
+        } else {
+          // Fallback to legacy base64 if someone clicks an old link
+          jsonString = Buffer.from(dataParam, 'base64').toString('utf-8');
+        }
+        setData(JSON.parse(jsonString));
       } catch (e) {
         console.error('Failed to parse invoice data from URL', e);
       }

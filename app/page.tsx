@@ -5,6 +5,7 @@ import styles from './invoice.module.css';
 import InvoiceForm from '../components/InvoiceForm';
 import InvoicePreview from '../components/InvoicePreview';
 import { InvoiceData, defaultInvoiceData } from './types';
+import LZString from 'lz-string';
 
 export default function Home() {
   const [data, setData] = useState<InvoiceData>(defaultInvoiceData);
@@ -40,8 +41,9 @@ export default function Home() {
   }, [data, isLoaded]);
 
   const generateShareUrl = () => {
-    const encoded = Buffer.from(JSON.stringify(data)).toString('base64');
-    return `${window.location.origin}/view?d=${encoded}`;
+    const jsonString = JSON.stringify(data);
+    const compressed = LZString.compressToEncodedURIComponent(jsonString);
+    return `${window.location.origin}/view?d=${compressed}`;
   };
 
   const saveToGoogleSheets = async (url: string) => {
@@ -56,22 +58,30 @@ export default function Home() {
         return m ? t : (parseFloat(str) || 0);
       };
       
+      let totalHoursNum = 0;
       const sub = data.subtasks.reduce((sum, item) => {
         const rate = item.rateType === 'minor' ? data.minorRate : (item.rateType === 'major' ? data.majorRate : (item.customRate || 0));
-        return sum + (parseQuantity(item.quantity) * rate);
+        const qty = parseQuantity(item.quantity);
+        totalHoursNum += qty;
+        return sum + (qty * rate);
       }, 0);
       const grandTotal = Math.ceil(sub / 1000) * 1000;
+      
+      const dueDate = new Date(new Date(data.issueDate).getTime() + 24 * 60 * 60 * 1000).toLocaleDateString('en-GB');
+      const taskList = data.subtasks.map(t => t.title).join(', ');
 
       const payload = {
         apiKey: '9W8HLtwj9C3tQrCwQN1PFzuTZLz69pgH',
         data: {
-          invoiceNumber: data.invoiceNumber,
           date: new Date(data.issueDate).toLocaleDateString('en-GB'),
-          projectName: data.taskProject,
+          dueDate: dueDate,
+          invoiceName: data.invoiceNumber,
           clientName: data.clientCompany || data.clientName,
-          senderName: data.myName,
-          grandTotal: grandTotal,
-          url: url
+          totalHours: totalHoursNum,
+          totalPrice: grandTotal,
+          sharedUrl: url,
+          task: taskList,
+          statusPayment: ''
         }
       };
 
@@ -97,7 +107,7 @@ export default function Home() {
     const url = generateShareUrl();
     await saveToGoogleSheets(url);
     navigator.clipboard.writeText(url).then(() => {
-      alert('Shareable URL copied to clipboard! (Data also logged to your Google Sheet)');
+      alert('Done! URL generated and copied to clipboard.');
     });
   };
 
@@ -165,15 +175,24 @@ export default function Home() {
         <InvoicePreview data={data} />
       </div>
 
+      {isSaving && (
+        <div className={styles.loadingOverlay}>
+          <div className={styles.loadingSpinner}></div>
+          <p>Generating Invoice...</p>
+        </div>
+      )}
+
       {/* Fixed bottom action bar for mobile */}
       <div className={styles.mobileActionBar}>
         <button className={styles.mobileActionBtn} onClick={handleShare} disabled={isSaving}>
-          {isSaving ? 'Saving...' : 'Share URL'}
+          Share URL
         </button>
         <button className={`${styles.mobileActionBtn} ${styles.mobilePrimary}`} onClick={handlePrint} disabled={isSaving}>
           Print / PDF
         </button>
-        <button className={`${styles.mobileActionBtn} ${styles.mobileDanger}`} onClick={handleLogout}>Log Out</button>
+        <button className={`${styles.mobileActionBtn} ${styles.mobileDanger}`} onClick={handleLogout} disabled={isSaving}>
+          Log Out
+        </button>
       </div>
     </main>
   );

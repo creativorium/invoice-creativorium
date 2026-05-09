@@ -56,7 +56,7 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving
         <p>Edit details below to generate the invoice.</p>
         <div className={styles.actions}>
           <button className={`${styles.btn} ${styles.btnSecondary}`} onClick={onShare} disabled={isSaving}>
-            {isSaving ? 'Saving...' : 'Share URL'}
+            Share URL
           </button>
           <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={onPrint} disabled={isSaving}>
             Print / PDF
