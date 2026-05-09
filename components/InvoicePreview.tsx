@@ -28,9 +28,19 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
     return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }).replace(/ /g, ' - ');
   };
 
+  const parseQuantity = (qtyStr: string | number): number => {
+    const str = String(qtyStr || '').toLowerCase().trim();
+    const num = parseFloat(str) || 0;
+    // If it explicitly ends with m, min, mins, minutes (e.g. "28m", "30 mins")
+    if (/^[\d.]+\s*m(ins?|inutes?)?$/.test(str)) {
+      return num / 60;
+    }
+    return num;
+  };
+
   const calculateSubTotal = () => {
     return data.subtasks.reduce((sum, item) => {
-      const parsedQty = parseFloat(String(item.quantity)) || 0;
+      const parsedQty = parseQuantity(item.quantity);
       return sum + (parsedQty * getRate(item.rateType, item.customRate));
     }, 0);
   };
@@ -78,7 +88,7 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
         <tbody>
           {data.subtasks.map((item, idx) => {
             const rate = getRate(item.rateType, item.customRate);
-            const parsedQty = parseFloat(String(item.quantity)) || 0;
+            const parsedQty = parseQuantity(item.quantity);
             const total = rate * parsedQty;
             
             // Fallback for old data structure
