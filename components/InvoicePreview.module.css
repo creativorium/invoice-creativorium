@@ -176,7 +176,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-top: 150px;
+  margin-top: 80px;
 }
 
 .paymentMethods {
@@ -254,14 +254,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto;
+  margin-top: 100px;
   padding-top: 20px;
   border-top: 1px solid #1A1A1A;
 }
 
 .companyName {
   font-size: 28px;
-  font-weight: 500;
+  font-weight: 700;
+  font-family: var(--font-family);
   color: var(--theme-color);
   letter-spacing: 1px;
 }
