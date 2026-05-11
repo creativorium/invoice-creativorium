@@ -12,9 +12,22 @@ export default function ChangeLog() {
         <h1 style={{ fontSize: '28px', marginBottom: '10px', color: 'var(--primary-color)', borderBottom: '2px solid var(--accent-color)', paddingBottom: '10px', display: 'inline-block' }}>Catatan Pembaruan (Change Log)</h1>
         <p style={{ color: 'var(--secondary-color)', marginBottom: '30px' }}>Pembaruan terbaru untuk Creativorium Invoice Generator.</p>
 
+
         <div style={{ marginBottom: '40px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
-            <span style={{ backgroundColor: 'var(--accent-color)', color: '#fff', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold' }}>v2.0.1</span>
+            <span style={{ backgroundColor: 'var(--accent-color)', color: '#fff', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold' }}>v2.2.0</span>
+            <span style={{ fontSize: '14px', color: 'var(--secondary-color)' }}>11 Mei 2026</span>
+          </div>
+          <h2 style={{ fontSize: '20px', marginBottom: '15px' }}>Penambahan Fitur Discount</h2>
+          <ul style={{ listStyleType: 'disc', paddingLeft: '20px', lineHeight: '1.8', color: 'var(--primary-color)' }}>
+            <li><strong>Penambahan discount per task:</strong> Penambahan fitur discount per task, sehingga task dapat ditambahkan discount amount atau percentage.</li>
+            <li><strong>Penambahan discount global:</strong> Penambahan fitur discount global, sehingga invoice dapat ditambahkan discount amount atau percentage.</li>
+          </ul>
+        </div>
+
+        <div style={{ marginBottom: '40px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
+            <span style={{ backgroundColor: '#666', color: '#fff', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold' }}>v2.1.0</span>
             <span style={{ fontSize: '14px', color: 'var(--secondary-color)' }}>9 Mei 2026</span>
           </div>
           <h2 style={{ fontSize: '20px', marginBottom: '15px' }}>Pembaruan UI & Tata Letak</h2>
@@ -29,7 +42,7 @@ export default function ChangeLog() {
         <div style={{ marginBottom: '30px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
             <span style={{ backgroundColor: '#666', color: '#fff', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold' }}>v2.0.0</span>
-            <span style={{ fontSize: '14px', color: 'var(--secondary-color)' }}>Mei 2026</span>
+            <span style={{ fontSize: '14px', color: 'var(--secondary-color)' }}>7 Mei 2026</span>
           </div>
           <h2 style={{ fontSize: '20px', marginBottom: '15px' }}>Pembaruan Fitur Mayor</h2>
           <ul style={{ listStyleType: 'disc', paddingLeft: '20px', lineHeight: '1.8', color: 'var(--primary-color)' }}>

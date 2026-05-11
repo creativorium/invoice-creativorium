@@ -13,6 +13,8 @@ export type Subtask = {
   quantityType?: 'qty' | 'hrs' | 'rate';
   rateType: string;
   customRate?: number;
+  discount?: number;
+  discountType?: 'amount' | 'percentage';
 };
 
 export type InvoiceData = {
@@ -45,6 +47,8 @@ export type InvoiceData = {
   dueDate?: string;
   note?: string;
   currency?: string;
+  globalDiscount?: number;
+  globalDiscountType?: 'amount' | 'percentage';
 };
 
 export const defaultInvoiceData: InvoiceData = {

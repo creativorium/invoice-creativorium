@@ -146,6 +146,30 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving
             </div>
           )}
         </div>
+        <div className={styles.row}>
+          <div className={styles.inputGroup}>
+            <label>Global Discount</label>
+            <div style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
+              <input 
+                type="number" 
+                name="globalDiscount" 
+                value={data.globalDiscount || ''} 
+                onChange={handleNumberChange} 
+                placeholder="Discount amount"
+                style={{ flex: '1' }}
+              />
+              <select 
+                name="globalDiscountType" 
+                value={data.globalDiscountType || 'amount'} 
+                onChange={handleChange}
+                style={{ flex: '1', minWidth: '130px' }}
+              >
+                <option value="amount">Fixed ({data.currency || 'IDR'})</option>
+                <option value="percentage">Percent (%)</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className={styles.section}>
@@ -242,7 +266,7 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving
               </select>
             </div>
             {task.rateType === 'custom' && (
-              <div className={styles.inputGroup} style={{ flex: '1 1 100px', minWidth: '100px' }}>
+              <div className={styles.inputGroup} style={{ flex: '1 1 100px', minWidth: '100%' }}>
                 <label>Amount ({data.currency || 'IDR'})</label>
                 <input 
                   type="number" 
@@ -251,6 +275,26 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving
                 />
               </div>
             )}
+            <div className={styles.inputGroup} style={{ flex: '1 1 120px', minWidth: '120px' }}>
+              <label>Discount</label>
+              <div style={{ display: 'flex', gap: '5px' }}>
+                <input 
+                  type="number" 
+                  value={task.discount || ''} 
+                  onChange={(e) => handleSubtaskChange(task.id, 'discount', parseFloat(e.target.value) || 0)} 
+                  placeholder="0"
+                  style={{ width: '60%' }}
+                />
+                <select 
+                  value={task.discountType || 'amount'} 
+                  onChange={(e) => handleSubtaskChange(task.id, 'discountType', e.target.value)}
+                  style={{ width: 'auto', flex: 1, padding: '8px 4px' }}
+                >
+                  <option value="amount">Fixed</option>
+                  <option value="percentage">Percent (%)</option>
+                </select>
+              </div>
+            </div>
             <button className={`${styles.btn} ${styles.btnDanger} ${styles.btnSmall}`} onClick={() => removeSubtask(task.id)} style={{ alignSelf: 'flex-end', marginBottom: '16px' }}>X</button>
           </div>
         ))}

@@ -77,11 +77,30 @@ export default function Home() {
         
         const qty = item.quantityType === 'rate' ? 1 : parseQuantity(item.quantity);
         totalHoursNum += qty;
-        return sum + (qty * rate);
+        
+        let itemTotal = qty * rate;
+        if (item.discount) {
+          if (item.discountType === 'percentage') {
+            itemTotal -= itemTotal * (item.discount / 100);
+          } else {
+            itemTotal -= item.discount;
+          }
+        }
+        return sum + itemTotal;
       }, 0);
       
-      const taxAmount = data.hasTax ? sub * (data.taxPercentage || 0) / 100 : 0;
-      const rawGrandTotal = sub + taxAmount;
+      let globalDiscountAmount = 0;
+      if (data.globalDiscount) {
+        if (data.globalDiscountType === 'percentage') {
+          globalDiscountAmount = sub * (data.globalDiscount / 100);
+        } else {
+          globalDiscountAmount = data.globalDiscount;
+        }
+      }
+      
+      const subAfterDiscount = sub - globalDiscountAmount;
+      const taxAmount = data.hasTax ? subAfterDiscount * (data.taxPercentage || 0) / 100 : 0;
+      const rawGrandTotal = subAfterDiscount + taxAmount;
       
       let grandTotal = rawGrandTotal;
       const currency = data.currency || 'IDR';

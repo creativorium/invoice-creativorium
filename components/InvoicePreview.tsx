@@ -76,13 +76,40 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
   const calculateSubTotal = () => {
     return data.subtasks.reduce((sum, item) => {
       const parsedQty = parseQuantity(item.quantity);
+      let itemTotal = parsedQty * getRate(item.rateType, item.customRate);
+      if (item.discount) {
+        if (item.discountType === 'percentage') {
+          itemTotal -= itemTotal * (item.discount / 100);
+        } else {
+          itemTotal -= item.discount;
+        }
+      }
+      return sum + itemTotal;
+    }, 0);
+  };
+
+  const calculateRawSubTotal = () => {
+    return data.subtasks.reduce((sum, item) => {
+      const parsedQty = parseQuantity(item.quantity);
       return sum + (parsedQty * getRate(item.rateType, item.customRate));
     }, 0);
   };
 
   const subTotal = calculateSubTotal();
-  const taxAmount = data.hasTax ? subTotal * (data.taxPercentage || 0) / 100 : 0;
-  const grandTotal = subTotal + taxAmount;
+  const rawSubTotal = calculateRawSubTotal();
+  
+  let globalDiscountAmount = 0;
+  if (data.globalDiscount) {
+    if (data.globalDiscountType === 'percentage') {
+      globalDiscountAmount = subTotal * (data.globalDiscount / 100);
+    } else {
+      globalDiscountAmount = data.globalDiscount;
+    }
+  }
+
+  const subTotalAfterGlobalDiscount = subTotal - globalDiscountAmount;
+  const taxAmount = data.hasTax ? subTotalAfterGlobalDiscount * (data.taxPercentage || 0) / 100 : 0;
+  const grandTotal = subTotalAfterGlobalDiscount + taxAmount;
   
   const totalQuantity = data.subtasks.reduce((sum, item) => sum + (item.quantityType === 'rate' ? 1 : parseQuantity(item.quantity)), 0);
   
@@ -180,16 +207,40 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
             // Fallback for old data structure
             const title = item.title || (item.description ? item.description.split('\n')[0] : '');
             const subtitle = item.subtitle || (item.description ? item.description.split('\n').slice(1).join('\n') : '');
+            
+            let itemDiscountAmount = 0;
+            if (item.discount) {
+              if (item.discountType === 'percentage') {
+                itemDiscountAmount = total * (item.discount / 100);
+              } else {
+                itemDiscountAmount = item.discount;
+              }
+            }
+            const totalAfterDiscount = total - itemDiscountAmount;
 
             return (
               <tr key={item.id} className={idx % 2 === 0 ? '' : styles.grayBg}>
                 <td>
                   <div className={styles.itemTitle}>{title}</div>
                   {subtitle && <div className={styles.itemDesc}>{subtitle}</div>}
+                  {item.discount && item.discount > 0 ? (
+                     <div className={styles.itemDesc} style={{ color: 'var(--theme-color)', fontSize: '11px', marginTop: '4px', fontWeight: 600 }}>
+                       Discount: {item.discountType === 'percentage' ? `${item.discount}%` : formatCurrency(item.discount)}
+                     </div>
+                  ) : null}
                 </td>
                 <td>{formatCurrency(rate)}</td>
                 <td className={styles.quantity}>{item.quantityType === 'rate' ? '-' : item.quantity}</td>
-                <td>{formatCurrency(total)}</td>
+                <td>
+                  {item.discount && item.discount > 0 ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                       <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '11px' }}>{formatCurrency(total)}</span>
+                       <span>{formatCurrency(totalAfterDiscount)}</span>
+                    </div>
+                  ) : (
+                    formatCurrency(total)
+                  )}
+                </td>
               </tr>
             );
           })}
@@ -208,6 +259,17 @@ export default function InvoicePreview({ data }: InvoicePreviewProps) {
             <span className={styles.totalColon}>:</span>
             <span className={styles.totalValue}>{formatCurrency(subTotal)}</span>
           </div>
+          {globalDiscountAmount > 0 && (
+            <div className={styles.totalRow}>
+              <span className={styles.totalLabel} style={{ color: 'var(--theme-color)' }}>
+                Discount {data.globalDiscountType === 'percentage' ? `(${data.globalDiscount}%)` : ''}
+              </span>
+              <span className={styles.totalColon}>:</span>
+              <span className={styles.totalValue} style={{ color: 'var(--theme-color)' }}>
+                -{formatCurrency(globalDiscountAmount)}
+              </span>
+            </div>
+          )}
           {data.hasTax && (
             <div className={styles.totalRow}>
               <span className={styles.totalLabel}>Tax ({data.taxPercentage}%)</span>
