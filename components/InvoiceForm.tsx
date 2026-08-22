@@ -3,6 +3,7 @@
 import React from 'react';
 import styles from './InvoiceForm.module.css';
 import { InvoiceData, Subtask } from '../app/types';
+import { renderRichText } from './richText';
 
 interface InvoiceFormProps {
   data: InvoiceData;
@@ -17,6 +18,35 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving
     const { name, value } = e.target;
     onChange({ ...data, [name]: value });
   };
+
+  const noteRef = React.useRef<HTMLTextAreaElement>(null);
+
+  /* Wraps the current note selection in markup, or inserts a placeholder when
+     nothing is selected, then reselects the text so it can be typed over. */
+  const wrapNote = (before: string, after: string, placeholder: string) => {
+    const el = noteRef.current;
+    if (!el) return;
+    const value = data.note || '';
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const selected = value.slice(start, end) || placeholder;
+    onChange({ ...data, note: value.slice(0, start) + before + selected + after + value.slice(end) });
+    requestAnimationFrame(() => {
+      el.focus();
+      el.setSelectionRange(start + before.length, start + before.length + selected.length);
+    });
+  };
+
+  const noteToolButton = {
+    padding: '4px 10px',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    background: '#fff',
+    cursor: 'pointer',
+    fontSize: '13px',
+    lineHeight: '20px',
+    minWidth: '30px',
+  } as React.CSSProperties;
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
@@ -378,13 +408,53 @@ export default function InvoiceForm({ data, onChange, onPrint, onShare, isSaving
         <div className={styles.row}>
           <div className={styles.inputGroup}>
             <label>Custom Note (above payment methods)</label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center', marginBottom: '8px' }}>
+              <button type="button" style={{ ...noteToolButton, fontWeight: 700 }} title="Bold" onClick={() => wrapNote('**', '**', 'bold text')}>B</button>
+              <button type="button" style={{ ...noteToolButton, fontStyle: 'italic' }} title="Italic" onClick={() => wrapNote('*', '*', 'italic text')}>I</button>
+              <button type="button" style={{ ...noteToolButton, textDecoration: 'underline' }} title="Underline" onClick={() => wrapNote('__', '__', 'underlined text')}>U</button>
+              <button type="button" style={{ ...noteToolButton, textDecoration: 'line-through' }} title="Strikethrough" onClick={() => wrapNote('~~', '~~', 'struck text')}>S</button>
+              <button type="button" style={{ ...noteToolButton, color: data.themeColor || '#ffa700', fontWeight: 600 }} title="Use invoice theme color" onClick={() => wrapNote('[theme]', '[/theme]', 'themed text')}>Theme</button>
+              <label style={{ ...noteToolButton, display: 'inline-flex', alignItems: 'center', gap: '6px', margin: 0 }} title="Color the selected text">
+                Color
+                <input
+                  type="color"
+                  defaultValue="#d93025"
+                  onChange={(e) => wrapNote(`[color=${e.target.value}]`, '[/color]', 'colored text')}
+                  style={{ width: '22px', height: '20px', padding: 0, border: 'none', background: 'none', cursor: 'pointer' }}
+                />
+              </label>
+            </div>
             <textarea 
+              ref={noteRef}
               name="note" 
               value={data.note || ''} 
               onChange={handleChange} 
-              placeholder="e.g. Thank you for your business!"
-              style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ddd', fontFamily: 'inherit', resize: 'vertical', minHeight: '60px' }}
+              placeholder="e.g. **Thank you** for your business!"
+              style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ddd', fontFamily: 'inherit', resize: 'vertical', minHeight: '90px' }}
             />
+            <div style={{ fontSize: '11px', color: '#888', marginTop: '6px', lineHeight: 1.6 }}>
+              Select text and use the buttons above, or type it directly:
+              {' '}<code>**bold**</code>, <code>*italic*</code>, <code>__underline__</code>,{' '}
+              <code>~~strike~~</code>, <code>[color=#ff0000]red[/color]</code>, <code>[theme]themed[/theme]</code>
+            </div>
+            {data.note && (
+              <div
+                style={{
+                  marginTop: '10px',
+                  backgroundColor: '#fff9c4',
+                  padding: '12px',
+                  borderRadius: '6px',
+                  whiteSpace: 'pre-wrap',
+                  color: '#555',
+                  fontSize: '13px',
+                  lineHeight: 1.5,
+                  ['--theme-color' as string]: data.themeColor || '#ffa700',
+                }}
+              >
+                <strong style={{ color: '#333' }}>Note:</strong><br />
+                {renderRichText(data.note)}
+              </div>
+            )}
           </div>
         </div>
         <div className={styles.row}>
